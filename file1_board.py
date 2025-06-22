@@ -1,25 +1,39 @@
 import tkinter as tk
 
-def start_draw(event):
-    global last_x, last_y
-    last_x = event.x
-    last_y = event.y
+class Brush:
+    def __init__(self, color="black", size=3):
+        self.color = color
+        self.size = size
 
-def draw(event):
-    global last_x, last_y
-    canvas.create_line(last_x, last_y, event.x, event.y, fill="black", width=3)
-    last_x = event.x
-    last_y = event.y
+    def draw(self, canvas, x1, y1, x2, y2):
+        canvas.create_line(x1, y1, x2, y2, fill=self.color, width=self.size, capstyle=tk.ROUND)
+
+class DrawingApp:
+    def __init__(self, master):
+        self.canvas = tk.Canvas(master, bg="white", width=600, height=400)
+        self.canvas.pack()
+        self.brush = Brush(color="black", size=3)
+        self.last_x = None
+        self.last_y = None
+        self.canvas.bind("<ButtonPress-1>", self.on_press)
+        self.canvas.bind("<B1-Motion>", self.on_drag)
+        self.canvas.bind("<ButtonRelease-1>", self.on_release)
+
+    def on_press(self, event):
+        self.last_x = event.x
+        self.last_y = event.y
+
+    def on_drag(self, event):
+        if self.last_x is not None and self.last_y is not None:
+            self.brush.draw(self.canvas, self.last_x, self.last_y, event.x, event.y)
+            self.last_x = event.x
+            self.last_y = event.y
+
+    def on_release(self, event):
+        self.last_x = None
+        self.last_y = None
 
 root = tk.Tk()
-root.title("Drawing_Board")
-
-canvas = tk.Canvas(root, bg="white", width=600, height=400)
-canvas.pack()
-last_x = None
-last_y = None
-
-canvas.bind("<ButtonPress-1>", start_draw)
-canvas.bind("<B1-Motion>", draw)
-
+root.title(" OOP One Brush")
+app = DrawingApp(root)
 root.mainloop()
