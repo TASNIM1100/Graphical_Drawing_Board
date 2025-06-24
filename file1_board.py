@@ -24,27 +24,38 @@ class SprayBrush(Brush):
 
 class DrawingApp:
     def __init__(self, master):
+        self.master = master
         self.canvas = tk.Canvas(master, bg="white", width=600, height=400)
         self.canvas.pack()
+        self.color = tk.StringVar(value="black")
+        self.size = tk.IntVar(value=3)
         self.brushes = {
-            "Pencil": Brush(color="black", size=3),
-            "Spray": SprayBrush(color="black", size=3)
+            "Pencil": Brush,
+            "Spray": SprayBrush
         }
-        self.current_brush = self.brushes["Pencil"]
+        self.current_brush_name = tk.StringVar(value="Pencil")
+        self.current_brush = self.brushes["Pencil"](color=self.color.get(), size=self.size.get())
         self.last_x = None
         self.last_y = None
 
-        btn_frame = tk.Frame(master)
-        btn_frame.pack()
+        control = tk.Frame(master)
+        control.pack()
         for name in self.brushes:
-            tk.Button(btn_frame, text=name, command=lambda n=name: self.select_brush(n)).pack(side=tk.LEFT)
+            tk.Radiobutton(control, text=name, variable=self.current_brush_name, value=name, command=self.update_brush).pack(side=tk.LEFT)
+        tk.Label(control, text="Size:").pack(side=tk.LEFT)
+        tk.Scale(control, from_=1, to=10, orient=tk.HORIZONTAL, variable=self.size, command=lambda e: self.update_brush()).pack(side=tk.LEFT)
+        tk.Label(control, text="Color:").pack(side=tk.LEFT)
+        for c in ["black", "red", "blue", "green"]:
+            tk.Radiobutton(control, text=c, variable=self.color, value=c, command=self.update_brush).pack(side=tk.LEFT)
 
         self.canvas.bind("<ButtonPress-1>", self.on_press)
         self.canvas.bind("<B1-Motion>", self.on_drag)
         self.canvas.bind("<ButtonRelease-1>", self.on_release)
+        self.update_brush()
 
-    def select_brush(self, name):
-        self.current_brush = self.brushes[name]
+    def update_brush(self):
+        brush_class = self.brushes[self.current_brush_name.get()]
+        self.current_brush = brush_class(color=self.color.get(), size=self.size.get())
 
     def on_press(self, event):
         self.last_x = event.x
@@ -61,6 +72,6 @@ class DrawingApp:
         self.last_y = None
 
 root = tk.Tk()
-root.title("Multiple Brushes (pencil , spray)")
+root.title("Step 4: Size & Color")
 app = DrawingApp(root)
 root.mainloop()
