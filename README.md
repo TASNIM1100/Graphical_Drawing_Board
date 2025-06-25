@@ -1,9 +1,6 @@
-# Graphical_Drawing_Board
-This is a Graphical_Drawing_Board .Built with Python and Tkinter.  Mostly iused topic that surrounds object oriented programming.
-It has :      
-
-----Different Brushes
-
-----Multiple Colors
-
-----Includes Eraser and Clear features for easy editing.   
+# Graphical Drawing Board 
+1. Interactive drawing application built using Python's Tkinter library.
+2. Supports multiple brush types: Pencil, Spray, Calligraphy, Pattern, Star, and Eraser.
+3. Users can select brush, color, and size, and draw on a resizable canvas.
+4. Displays the current brush type dynamically in the interface.
+5. Includes a separate test file to check brush class instantiation and basic OOP behavior.
