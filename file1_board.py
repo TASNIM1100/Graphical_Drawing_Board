@@ -2,6 +2,7 @@ import tkinter as tk
 from abc import ABC, abstractmethod
 import random
 
+# Simple abstract brush base class
 class Brush(ABC):
     def __init__(self, color="black", size=3):
         self.color = color
@@ -11,10 +12,12 @@ class Brush(ABC):
     def draw_stroke(self, canvas, x1, y1, x2, y2):
         pass
 
+# Pencil brush draws simple lines
 class PencilBrush(Brush):
     def draw_stroke(self, canvas, x1, y1, x2, y2):
         canvas.create_line(x1, y1, x2, y2, fill=self.color, width=self.size, capstyle=tk.ROUND)
 
+# Spray brush for spray paint effect
 class SprayBrush(Brush):
     def draw_stroke(self, canvas, x1, y1, x2, y2):
         steps = int(max(abs(x2-x1), abs(y2-y1)))
@@ -28,11 +31,13 @@ class SprayBrush(Brush):
                 if dx*dx + dy*dy < (self.size*2) ** 2:
                     canvas.create_oval(x+dx, y+dy, x+dx+1, y+dy+1, fill=self.color, outline="")
 
+# Calligraphy brush draws two lines for effect
 class CalligraphyBrush(Brush):
     def draw_stroke(self, canvas, x1, y1, x2, y2):
         canvas.create_line(x1, y1, x2, y2, fill=self.color, width=self.size*2, capstyle=tk.BUTT)
         canvas.create_line(x1, y1, x2, y2, fill=self.color, width=self.size, capstyle=tk.BUTT)
 
+# Pattern brush draws rectangles on the path
 class PatternBrush(Brush):
     def draw_stroke(self, canvas, x1, y1, x2, y2):
         steps = int(max(abs(x2-x1), abs(y2-y1)))
@@ -40,16 +45,17 @@ class PatternBrush(Brush):
             t = i / steps if steps else 0
             x = x1 + (x2 - x1) * t
             y = y1 + (y2 - y1) * t
-            size = self.size
             if i % 5 == 0:
-                canvas.create_rectangle(x-size, y-size, x+size, y+size, fill=self.color, outline="")
+                canvas.create_rectangle(x-self.size, y-self.size, x+self.size, y+self.size, fill=self.color, outline="")
 
+# Eraser brush (always "white")
 class EraserBrush(Brush):
     def __init__(self, size=10):
         super().__init__(color="white", size=size)
     def draw_stroke(self, canvas, x1, y1, x2, y2):
         canvas.create_line(x1, y1, x2, y2, fill="white", width=self.size, capstyle=tk.ROUND)
 
+# Drawing Application
 class DrawingApp:
     def __init__(self, master):
         self.master = master
@@ -57,6 +63,7 @@ class DrawingApp:
         self.canvas.pack()
         self.color = tk.StringVar(value="black")
         self.size = tk.IntVar(value=3)
+        # Store brush classes, not objects
         self.brushes = {
             "Pencil": PencilBrush,
             "Spray": SprayBrush,
@@ -71,13 +78,18 @@ class DrawingApp:
 
         control = tk.Frame(master)
         control.pack()
+        # Brush select
+        tk.Label(control, text="Brush:").pack(side=tk.LEFT)
         for name in self.brushes:
             tk.Radiobutton(control, text=name, variable=self.current_brush_name, value=name, command=self.update_brush).pack(side=tk.LEFT)
+        # Size select
         tk.Label(control, text="Size:").pack(side=tk.LEFT)
         tk.Scale(control, from_=1, to=15, orient=tk.HORIZONTAL, variable=self.size, command=lambda e: self.update_brush()).pack(side=tk.LEFT)
+        # Color select
         tk.Label(control, text="Color:").pack(side=tk.LEFT)
         for c in ["black", "red", "blue", "green", "orange"]:
-            tk.Radiobutton(control, text=c, variable=self.color, value=c, command=self.update_brush).pack(side=tk.LEFT)
+            tk.Radiobutton(control, text=c.capitalize(), variable=self.color, value=c, command=self.update_brush).pack(side=tk.LEFT)
+        # Clear button
         tk.Button(control, text="Clear", command=self.clear_canvas).pack(side=tk.LEFT)
 
         self.canvas.bind("<ButtonPress-1>", self.on_press)
@@ -111,6 +123,6 @@ class DrawingApp:
         self.canvas.delete("all")
 
 root = tk.Tk()
-root.title("Final Drawing App")
+root.title("with comment")
 app = DrawingApp(root)
 root.mainloop()
