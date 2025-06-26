@@ -1,3 +1,8 @@
+# The program below is a Graphical Drawing Board
+# My project topic was : Drawing
+# I have added a Testing file called test_GDB_PROJECT.py in the same repository
+# Thank You
+
 import tkinter as tk
 from abc import ABC, abstractmethod
 import random
@@ -16,7 +21,7 @@ class Brush(ABC):
     def brush_type(self):
         return "Generic Brush"
 
-# Brush Implementations
+# This  part is  for Brush Implementations
 
 class PencilBrush(Brush):
     def draw_stroke(self, canvas, x1, y1, x2, y2):
@@ -90,17 +95,17 @@ class EraserBrush(Brush):
     def brush_type(self):
         return "Eraser"
 
-# Drawing App 
+# The Drawing App segment:
 
 class DrawingApp:
     def __init__(self, master):
         self.master = master
-        master.title(" Graphical Drawing Board _(final)")
+        master.title(" Graphical Drawing Board _OOP (FINAL VERSION)")
 
         self.canvas = tk.Canvas(master, bg="white", width=600, height=400)
         self.canvas.pack(fill=tk.BOTH, expand=True)
 
-        # Brush options
+        # You will see the Brush options here
         self.brushes = {
             "Pencil": PencilBrush(),
             "Spray": SprayBrush(),
@@ -112,7 +117,7 @@ class DrawingApp:
         self.current_brush_name = tk.StringVar(value="Pencil")
         self.size = tk.IntVar(value=3)
 
-        # Color options
+        # This is all the Colors
         self.colors = {
             "Black": "black",
             "Red": "red",
@@ -122,7 +127,7 @@ class DrawingApp:
         }
         self.color_name = tk.StringVar(value="Black")
 
-        # This part for UI Controls
+        # This part for User Interface Controls
         control_frame = tk.Frame(master)
         control_frame.pack(fill=tk.X)
 
@@ -160,7 +165,7 @@ class DrawingApp:
 
         tk.Button(control_frame, text="Clear", command=self.clear_canvas).pack(side=tk.RIGHT)
 
-        # Show Brush Type
+        # This part is  for Showing Brush Type while drawing
         self.brush_type_label = tk.Label(master, text="")
         self.brush_type_label.pack()
 
